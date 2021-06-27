@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:howdy/models/customuser.dart';
+import 'package:howdy/screens/chatScreen.dart';
 import 'package:howdy/widgets/appBar.dart';
 import 'package:howdy/widgets/inputDecoration.dart';
 import 'package:email_validator/email_validator.dart';
@@ -33,7 +34,10 @@ class _SignUpState extends State<SignUp> {
         CustomUser? val = await authMethods.signInWithEmailAndPassword(
             emailtec.text, passwordtec.text);
         if (val != null) {
-          print("$val");
+          print("${val.userId}");
+
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => ChatScreen()));
         }
       }
     }
