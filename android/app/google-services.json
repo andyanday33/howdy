@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "588335395202",
+    "project_id": "howdy-1d9de",
+    "storage_bucket": "howdy-1d9de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588335395202:android:e5b099d53cf475efc0df9b",
+        "android_client_info": {
+          "package_name": "com.example.howdy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "588335395202-nqom4bng2f894jsvrj6n0egi2vf9c832.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQR3kxsG3p2Xvog2eqndooxl7AnydQ7Is"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "588335395202-nqom4bng2f894jsvrj6n0egi2vf9c832.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
