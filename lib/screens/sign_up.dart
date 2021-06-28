@@ -5,6 +5,7 @@ import 'package:howdy/widgets/appBar.dart';
 import 'package:howdy/widgets/inputDecoration.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:howdy/services/auth.dart';
+import 'package:howdy/services/database.dart';
 
 class SignUp extends StatefulWidget {
   final Function toggleView;
@@ -18,6 +19,7 @@ class _SignUpState extends State<SignUp> {
   bool isLoading = false;
 
   AuthenticationMethods authMethods = new AuthenticationMethods();
+  DatabaseOperations databaseOps = new DatabaseOperations();
 
   final formKey = new GlobalKey<FormState>();
   TextEditingController userNametec = new TextEditingController();
@@ -34,6 +36,11 @@ class _SignUpState extends State<SignUp> {
 
         CustomUser? val = await authMethods.signInWithEmailAndPassword(
             emailtec.text, passwordtec.text);
+        Map<String, String> userMap = {
+          "name": userNametec.text,
+          "email": emailtec.text
+        };
+        databaseOps.saveUserInfo(userMap);
         if (val != null) {
           print("${val.userId}");
 
