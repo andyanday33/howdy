@@ -3,7 +3,8 @@ import 'package:howdy/widgets/appBar.dart';
 import 'package:howdy/widgets/inputDecoration.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+  final Function toggleView;
+  SignIn(this.toggleView);
 
   @override
   _SignInState createState() => _SignInState();
@@ -80,19 +81,24 @@ class _SignInState extends State<SignIn> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: <Color>[
-                    Colors.white,
-                    Colors.white70,
-                  ]),
-                  borderRadius: BorderRadius.circular(25),
+              child: GestureDetector(
+                onTap: () {
+                  widget.toggleView();
+                },
+                child: Container(
+                  height: 50,
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: <Color>[
+                      Colors.white,
+                      Colors.white70,
+                    ]),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Text("Sign Up Instead",
+                      style: TextStyle(color: Colors.black87, fontSize: 20)),
                 ),
-                child: Text("Sign Up Instead",
-                    style: TextStyle(color: Colors.black87, fontSize: 20)),
               ),
             ),
           ],

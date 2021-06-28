@@ -7,7 +7,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:howdy/services/auth.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+  final Function toggleView;
+  SignUp(this.toggleView);
 
   @override
   _SignUpState createState() => _SignUpState();
@@ -168,20 +169,25 @@ class _SignUpState extends State<SignUp> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Container(
-                              height: 50,
-                              alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: <Color>[
-                                  Colors.white,
-                                  Colors.white70,
-                                ]),
-                                borderRadius: BorderRadius.circular(25),
+                            child: GestureDetector(
+                              onTap: () {
+                                widget.toggleView();
+                              },
+                              child: Container(
+                                height: 50,
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: <Color>[
+                                    Colors.white,
+                                    Colors.white70,
+                                  ]),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: Text("Sign In Instead",
+                                    style: TextStyle(
+                                        color: Colors.black87, fontSize: 20)),
                               ),
-                              child: Text("Sign In Instead",
-                                  style: TextStyle(
-                                      color: Colors.black87, fontSize: 20)),
                             ),
                           ),
                         ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:howdy/screens/sign_in.dart';
 import 'package:howdy/screens/sign_up.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:howdy/helper/authenticate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.grey[900],
         primarySwatch: Colors.blue,
       ),
-      home: SignUp(),
+      home: Authenticate(),
     );
   }
 }
