@@ -11,4 +11,12 @@ class DatabaseOperations {
   saveUserInfo(userMap) {
     FirebaseFirestore.instance.collection("users").add(userMap);
   }
+
+  createConversationRoom(String conversationRoomId, conversationRoomMap) {
+    FirebaseFirestore.instance
+        .collection("conversationRooms")
+        .doc(conversationRoomId)
+        .set(conversationRoomMap)
+        .catchError((e) => {print(e.toString())});
+  }
 }

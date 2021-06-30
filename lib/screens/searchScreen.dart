@@ -36,6 +36,12 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  //Create a conversation room, send user to this conversation screen
+  createConversation(String username) {
+    List<String> users = [username];
+    //databaseOps.createConversation()
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +76,6 @@ class _SearchScreenState extends State<SearchScreen> {
           Expanded(
               child: searchSnapshot != null
                   ? new ListView.builder(
-                      shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemCount: getLength(searchSnapshot),
                       itemBuilder: (context, index) {
@@ -94,23 +99,32 @@ class SearchItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
+      child: new Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
+          new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(username, style: TextStyle(color: Colors.amberAccent)),
               Text(email, style: TextStyle(color: Colors.white)),
-              Spacer(),
-              Container(
+            ],
+          ),
+          SizedBox(width: 160.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
                 decoration: BoxDecoration(
                   color: Colors.amberAccent,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                child: Text("Send Message"),
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                child: Text("Message", style: TextStyle(fontSize: 16)),
               ),
-            ],
-          )
+            ),
+          ),
         ],
       ),
     );
