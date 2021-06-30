@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:howdy/services/database.dart';
 import 'package:howdy/widgets/appBar.dart';
 import 'package:howdy/widgets/inputDecoration.dart';
 
@@ -11,6 +13,28 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchtec = new TextEditingController();
+  DatabaseOperations databaseOps = new DatabaseOperations();
+
+  QuerySnapshot? searchSnapshot;
+
+  initiateSearchUser() {
+    databaseOps.getUserByUsername(searchtec.text).then((result) => {
+          setState(() {
+            print(result);
+            print("hello from initiates");
+            searchSnapshot = result;
+            print(searchSnapshot?.docs.length);
+          })
+        });
+  }
+
+  getLength(QuerySnapshot? qs) {
+    if (qs != null) {
+      return qs.docs.length;
+    } else {
+      return 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +53,66 @@ class _SearchScreenState extends State<SearchScreen> {
                   controller: searchtec,
                   decoration: textFieldDecoration("search username..."),
                 )),
-                Container(
-                    padding: EdgeInsets.all(6.0),
-                    height: 30,
-                    width: 30,
-                    child: Icon(Icons.search, color: Colors.white60))
+                GestureDetector(
+                  onTap: () {
+                    print("You tapped bro!");
+                    initiateSearchUser();
+                  },
+                  child: Container(
+                      padding: EdgeInsets.all(6.0),
+                      height: 30,
+                      width: 30,
+                      child: Icon(Icons.search, color: Colors.white60)),
+                )
               ],
             ),
           ),
+          Expanded(
+              child: searchSnapshot != null
+                  ? new ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: getLength(searchSnapshot),
+                      itemBuilder: (context, index) {
+                        return SearchItems(
+                          username: searchSnapshot?.docs[index].get("name"),
+                          email: searchSnapshot?.docs[index].get("email"),
+                        );
+                      })
+                  : Container()),
         ],
       )),
+    );
+  }
+}
+
+class SearchItems extends StatelessWidget {
+  final String username;
+  final String email;
+  SearchItems({required this.username, required this.email});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        children: [
+          Column(
+            children: [
+              Text(username, style: TextStyle(color: Colors.amberAccent)),
+              Text(email, style: TextStyle(color: Colors.white)),
+              Spacer(),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.amberAccent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Text("Send Message"),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
