@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:howdy/helper/authenticate.dart';
+import 'package:howdy/helper/constants.dart';
+import 'package:howdy/helper/helperfunctions.dart';
 import 'package:howdy/screens/searchScreen.dart';
 import 'package:howdy/widgets/appBar.dart';
 import 'package:howdy/services/auth.dart';
@@ -14,6 +16,17 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   AuthenticationMethods authMethods = new AuthenticationMethods();
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUserInfo();
+    super.initState();
+  }
+
+  getUserInfo() async {
+    Constants.loggedUsername =
+        await HelperFunctions.getUserNameFromSharedPref();
+  }
 
   @override
   Widget build(BuildContext context) {

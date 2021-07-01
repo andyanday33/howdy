@@ -8,6 +8,13 @@ class DatabaseOperations {
         .get();
   }
 
+  getUserByEmail(String email) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .where("email", isEqualTo: email)
+        .get();
+  }
+
   saveUserInfo(userMap) {
     FirebaseFirestore.instance.collection("users").add(userMap);
   }

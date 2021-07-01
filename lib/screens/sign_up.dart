@@ -6,6 +6,7 @@ import 'package:howdy/widgets/inputDecoration.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:howdy/services/auth.dart';
 import 'package:howdy/services/database.dart';
+import 'package:howdy/helper/helperfunctions.dart';
 
 class SignUp extends StatefulWidget {
   final Function toggleView;
@@ -30,20 +31,25 @@ class _SignUpState extends State<SignUp> {
     FormState? form = formKey.currentState;
     if (form != null) {
       if (form.validate()) {
+        Map<String, String> userMap = {
+          "name": userNametec.text,
+          "email": emailtec.text
+        };
+
+        HelperFunctions.saveUserNameToSharedPref(userNametec.text);
+        HelperFunctions.saveEmailToSharedPref(emailtec.text);
+
         setState(() {
           isLoading = true;
         });
 
         CustomUser? val = await authMethods.signInWithEmailAndPassword(
             emailtec.text, passwordtec.text);
-        Map<String, String> userMap = {
-          "name": userNametec.text,
-          "email": emailtec.text
-        };
+
         databaseOps.saveUserInfo(userMap);
         if (val != null) {
           print("${val.userId}");
-
+          HelperFunctions.saveUserLoggedInToSharedPref(true);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => ChatScreen()));
         }

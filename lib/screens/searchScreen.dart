@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:howdy/helper/constants.dart';
+import 'package:howdy/screens/conversation.dart';
 import 'package:howdy/services/database.dart';
 import 'package:howdy/widgets/appBar.dart';
 import 'package:howdy/widgets/inputDecoration.dart';
@@ -20,12 +22,33 @@ class _SearchScreenState extends State<SearchScreen> {
   initiateSearchUser() {
     databaseOps.getUserByUsername(searchtec.text).then((result) => {
           setState(() {
-            print(result);
-            print("hello from initiates");
+            //print(result);
+            //print("hello from initiates");
             searchSnapshot = result;
-            print(searchSnapshot?.docs.length);
+            //print(searchSnapshot?.docs.length);
           })
         });
+  }
+
+  //Create a conversation room, send user to this conversation screen
+  createConversation({required String username}) {
+    if (username == Constants.loggedUsername) {
+      print("you cannot send message to yourself!");
+    } else {
+      String conversationRoomId =
+          getChatRoomId(username, Constants.loggedUsername);
+
+      List<String?> users = [username, Constants.loggedUsername];
+      Map<String, dynamic> conversationRoomMap = {
+        "users": users,
+        "conversationRoomId": conversationRoomId
+      };
+      DatabaseOperations()
+          .createConversationRoom(conversationRoomId, conversationRoomMap);
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ConversationScreen();
+      }));
+    }
   }
 
   getLength(QuerySnapshot? qs) {
@@ -34,12 +57,6 @@ class _SearchScreenState extends State<SearchScreen> {
     } else {
       return 0;
     }
-  }
-
-  //Create a conversation room, send user to this conversation screen
-  createConversation(String username) {
-    List<String> users = [username];
-    //databaseOps.createConversation()
   }
 
   @override
@@ -61,7 +78,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 )),
                 GestureDetector(
                   onTap: () {
-                    print("You tapped bro!");
+                    //print("You tapped bro!");
                     initiateSearchUser();
                   },
                   child: Container(
@@ -79,9 +96,10 @@ class _SearchScreenState extends State<SearchScreen> {
                       scrollDirection: Axis.horizontal,
                       itemCount: getLength(searchSnapshot),
                       itemBuilder: (context, index) {
-                        return SearchItems(
+                        return searchTile(
                           username: searchSnapshot?.docs[index].get("name"),
                           email: searchSnapshot?.docs[index].get("email"),
+                          createConversation: createConversation,
                         );
                       })
                   : Container()),
@@ -91,42 +109,65 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-class SearchItems extends StatelessWidget {
-  final String username;
-  final String email;
-  SearchItems({required this.username, required this.email});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(username, style: TextStyle(color: Colors.amberAccent)),
-              Text(email, style: TextStyle(color: Colors.white)),
-            ],
-          ),
-          SizedBox(width: 160.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.amberAccent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                child: Text("Message", style: TextStyle(fontSize: 16)),
+Widget searchTile(
+    {required String username,
+    required String email,
+    required Function createConversation}) {
+  return Container(
+    child: new Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(username, style: TextStyle(color: Colors.amberAccent)),
+            Text(email, style: TextStyle(color: Colors.white)),
+          ],
+        ),
+        SizedBox(width: 160.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: GestureDetector(
+            onTap: () {
+              createConversation(username: username);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.amberAccent,
+                borderRadius: BorderRadius.circular(12),
               ),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              child: Text("Message", style: TextStyle(fontSize: 16)),
             ),
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
+}
+
+// class SearchItems extends StatelessWidget {
+//   final String username;
+//   final String email;
+//   SearchItems({required this.username, required this.email});
+
+//   @override
+//   Widget build(BuildContext context) {
+
+//   }
+// }
+
+getChatRoomId(String? x, String? y) {
+  String? xSub = x?.substring(0, 1);
+  String? ySub = y?.substring(0, 1);
+  if (xSub != null && ySub != null) {
+    if (xSub.codeUnitAt(0) > ySub.codeUnitAt(0)) {
+      return "$y\_$x";
+    } else {
+      return "$x\_$y";
+    }
+  } else {
+    return "";
   }
 }
