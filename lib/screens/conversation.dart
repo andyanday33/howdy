@@ -45,7 +45,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 colors: [Colors.white30, Colors.white38]),
                             borderRadius: BorderRadius.circular(40)),
                         padding: EdgeInsets.all(12),
-                        child: Icon(Icons.message_rounded),
+                        child: Icon(Icons.send),
                       ),
                     ),
                   ],
