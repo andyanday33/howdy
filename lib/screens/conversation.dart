@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:howdy/helper/constants.dart';
+import 'package:howdy/services/database.dart';
 import 'package:howdy/widgets/appBar.dart';
 
 class ConversationScreen extends StatefulWidget {
-  const ConversationScreen({Key? key}) : super(key: key);
+  String chatroomId;
+  ConversationScreen(this.chatroomId);
 
   @override
   _ConversationScreenState createState() => _ConversationScreenState();
@@ -10,6 +13,18 @@ class ConversationScreen extends StatefulWidget {
 
 class _ConversationScreenState extends State<ConversationScreen> {
   TextEditingController messagetec = new TextEditingController();
+
+  DatabaseOperations databaseOps = new DatabaseOperations();
+
+  sendMessage() {
+    if (messagetec.text.isNotEmpty) {
+      Map<String, String> messageMap = {
+        "message": messagetec.text,
+        "sentBy": Constants.loggedUsername.toString(),
+      };
+      databaseOps.getConversationMessages(widget.chatroomId, messageMap);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +51,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           )),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        sendMessage();
+                      },
                       child: Container(
                         height: 40,
                         width: 40,

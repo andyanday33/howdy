@@ -46,7 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
       DatabaseOperations()
           .createConversationRoom(conversationRoomId, conversationRoomMap);
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ConversationScreen();
+        return ConversationScreen(conversationRoomId);
       }));
     }
   }

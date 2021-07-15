@@ -26,4 +26,13 @@ class DatabaseOperations {
         .set(conversationRoomMap)
         .catchError((e) => {print(e.toString())});
   }
+
+  getConversationMessages(String chatroomId, messageMap) {
+    FirebaseFirestore.instance
+        .collection("conversationRooms")
+        .doc(chatroomId)
+        .collection("chats")
+        .add(messageMap)
+        .catchError((e) => {print(e.toString())});
+  }
 }
