@@ -27,12 +27,20 @@ class DatabaseOperations {
         .catchError((e) => {print(e.toString())});
   }
 
-  getConversationMessages(String chatroomId, messageMap) {
+  addConversationMessages(String chatroomId, messageMap) {
     FirebaseFirestore.instance
         .collection("conversationRooms")
         .doc(chatroomId)
         .collection("chats")
         .add(messageMap)
         .catchError((e) => {print(e.toString())});
+  }
+
+  getConversationMessages(String chatroomId) {
+    return FirebaseFirestore.instance
+        .collection("conversationRooms")
+        .doc(chatroomId)
+        .collection("chats")
+        .snapshots();
   }
 }

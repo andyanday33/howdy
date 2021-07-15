@@ -16,14 +16,38 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   DatabaseOperations databaseOps = new DatabaseOperations();
 
+  Stream? chatMessageStream;
+
+  Widget ChatMessageList() {
+    // return StreamBuilder(
+    //   stream: chatMessageStream,
+    //   builder: (context, snapshot){
+    //     return ListView.builder(
+    //       itemCount: snapshot.data?.,
+    //     )
+    //   }
+    // )
+    return Scaffold();
+  }
+
   sendMessage() {
     if (messagetec.text.isNotEmpty) {
       Map<String, String> messageMap = {
         "message": messagetec.text,
         "sentBy": Constants.loggedUsername.toString(),
       };
-      databaseOps.getConversationMessages(widget.chatroomId, messageMap);
+      databaseOps.addConversationMessages(widget.chatroomId, messageMap);
     }
+  }
+
+  @override
+  void initState() {
+    databaseOps.getConversationMessages(widget.chatroomId).then((value) {
+      setState(() {
+        chatMessageStream = value;
+      });
+    });
+    super.initState();
   }
 
   @override
