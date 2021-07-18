@@ -44,4 +44,11 @@ class DatabaseOperations {
         .orderBy("timeStamp", descending: false)
         .snapshots();
   }
+
+  getConversations(String username) async {
+    return await FirebaseFirestore.instance
+        .collection("conversationRooms")
+        .where("users", arrayContains: username)
+        .snapshots();
+  }
 }
