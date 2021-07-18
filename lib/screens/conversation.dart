@@ -30,7 +30,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     Map<String, dynamic> data =
                         (snapshot.data! as QuerySnapshot).docs[index].data()
                             as Map<String, dynamic>;
-                    return MessageTile(data["message"]);
+                    return MessageTile(data["message"],
+                        data["sentBy"] == Constants.loggedUsername);
                   },
                 )
               : Container();
@@ -112,12 +113,36 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
 class MessageTile extends StatelessWidget {
   final String message;
-  MessageTile(this.message);
+  final bool isSentByMe;
+  MessageTile(this.message, this.isSentByMe);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(message, style: TextStyle(color: Colors.white)),
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      width: MediaQuery.of(context).size.width,
+      alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: isSentByMe
+                  ? [Colors.black87, Colors.black54]
+                  : [Colors.amberAccent, Colors.amberAccent]),
+          borderRadius: isSentByMe
+              ? BorderRadius.only(
+                  topLeft: Radius.circular(22),
+                  topRight: Radius.circular(22),
+                  bottomLeft: Radius.circular(22))
+              : BorderRadius.only(
+                  topLeft: Radius.circular(22),
+                  topRight: Radius.circular(22),
+                  bottomRight: Radius.circular(22)),
+        ),
+        child: Text(message,
+            style: TextStyle(
+                fontSize: 16, color: isSentByMe ? Colors.white : Colors.black)),
+      ),
     );
   }
 }
