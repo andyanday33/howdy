@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:howdy/helper/constants.dart';
 import 'package:howdy/services/database.dart';
@@ -19,24 +20,32 @@ class _ConversationScreenState extends State<ConversationScreen> {
   Stream? chatMessageStream;
 
   Widget ChatMessageList() {
-    // return StreamBuilder(
-    //   stream: chatMessageStream,
-    //   builder: (context, snapshot){
-    //     return ListView.builder(
-    //       itemCount: snapshot.data?.,
-    //     )
-    //   }
-    // )
-    return Scaffold();
+    return StreamBuilder(
+        stream: chatMessageStream,
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  itemCount: (snapshot.data! as QuerySnapshot).docs.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> data =
+                        (snapshot.data! as QuerySnapshot).docs[index].data()
+                            as Map<String, dynamic>;
+                    return MessageTile(data["message"]);
+                  },
+                )
+              : Container();
+        });
   }
 
   sendMessage() {
     if (messagetec.text.isNotEmpty) {
-      Map<String, String> messageMap = {
+      Map<String, dynamic> messageMap = {
         "message": messagetec.text,
         "sentBy": Constants.loggedUsername.toString(),
+        "timeStamp": DateTime.now().millisecondsSinceEpoch,
       };
       databaseOps.addConversationMessages(widget.chatroomId, messageMap);
+      messagetec.text = "";
     }
   }
 
@@ -57,6 +66,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       body: Container(
         child: Stack(
           children: [
+            ChatMessageList(),
             Container(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -96,6 +106,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MessageTile extends StatelessWidget {
+  final String message;
+  MessageTile(this.message);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text(message, style: TextStyle(color: Colors.white)),
     );
   }
 }

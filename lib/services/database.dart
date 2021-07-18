@@ -36,11 +36,12 @@ class DatabaseOperations {
         .catchError((e) => {print(e.toString())});
   }
 
-  getConversationMessages(String chatroomId) {
-    return FirebaseFirestore.instance
+  getConversationMessages(String chatroomId) async {
+    return await FirebaseFirestore.instance
         .collection("conversationRooms")
         .doc(chatroomId)
         .collection("chats")
+        .orderBy("timeStamp", descending: false)
         .snapshots();
   }
 }
